@@ -49,6 +49,37 @@ app.get("/book/:id", (req, res) => {
     })
 })
 
+app.get("/edit/:id", (req, res) => {
+    const id = req.params.id
+
+    const sql = "SELECT * FROM books WHERE id = ${id}"
+
+    conn.query(sql, (error, data) => {
+        if (error) {
+            return console.log(error)
+        }
+
+        const book = data[0]
+
+        console.log(book)
+
+        res.render("edit", { book })
+    })
+})
+
+app.post("/edit/save", (req, res) => {
+    const { id, nome, pageqty } = req.body
+
+    const sql = "UPDATE books SET nome = '${nome}', pageqty = ${pageqty} WHERE id = ${id}"
+
+    conn.query(sql, (error, data) => {
+        if (error) {
+            return console.log(error)
+        }
+
+        res.redirect("/")
+    })
+})
 //mysql coonnection
 const conn = mysql.createConnection({
     host: "localhost",
